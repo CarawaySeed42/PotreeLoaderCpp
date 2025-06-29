@@ -1,0 +1,112 @@
+{
+	"version": "2.0",
+	"name": "PoTreeLoaderCppSample",
+	"description": "",
+	"points": 888104,
+	"projection": "",
+	"hierarchy": {
+		"firstChunkSize": 3894, 
+		"stepSize": 4, 
+		"depth": 5
+	},
+	"offset": [34.326099395751953, 48.070098876953125, 123.3112],
+	"scale": [0.0001, 0.0001, 0.0001],
+	"spacing": 0.98919296875000029,
+	"boundingBox": {
+		"min": [34.326099395751953, 48.070098876953125, 123.3112], 
+		"max": [160.94279939575199, 174.68679887695316, 249.92790000000002]
+	},
+	"attributes": [
+		{
+			"name": "position",
+			"description": "",
+			"size": 12,
+			"numElements": 3,
+			"elementSize": 4,
+			"type": "int32",
+			"min": [34.326099395751953, 48.070098876953125, 123.3112],
+			"max": [160.94279939575196, 163.87449887695311, 142.4365]
+		},{
+			"name": "intensity",
+			"description": "",
+			"size": 2,
+			"numElements": 1,
+			"elementSize": 2,
+			"type": "uint16",
+			"min": [256],
+			"max": [65024]
+		},{
+			"name": "return number",
+			"description": "",
+			"size": 1,
+			"numElements": 1,
+			"elementSize": 1,
+			"type": "uint8",
+			"min": [0],
+			"max": [0]
+		},{
+			"name": "number of returns",
+			"description": "",
+			"size": 1,
+			"numElements": 1,
+			"elementSize": 1,
+			"type": "uint8",
+			"min": [0],
+			"max": [0]
+		},{
+			"name": "classification",
+			"description": "",
+			"size": 1,
+			"numElements": 1,
+			"elementSize": 1,
+			"type": "uint8",
+			"min": [0],
+			"max": [0]
+		},{
+			"name": "scan angle rank",
+			"description": "",
+			"size": 1,
+			"numElements": 1,
+			"elementSize": 1,
+			"type": "uint8",
+			"min": [0],
+			"max": [0]
+		},{
+			"name": "user data",
+			"description": "",
+			"size": 1,
+			"numElements": 1,
+			"elementSize": 1,
+			"type": "uint8",
+			"min": [0],
+			"max": [0]
+		},{
+			"name": "point source id",
+			"description": "",
+			"size": 2,
+			"numElements": 1,
+			"elementSize": 2,
+			"type": "uint16",
+			"min": [0],
+			"max": [0]
+		},{
+			"name": "gps-time",
+			"description": "",
+			"size": 8,
+			"numElements": 1,
+			"elementSize": 8,
+			"type": "double",
+			"min": [262947936.17529297],
+			"max": [262949373.48925781]
+		},{
+			"name": "rgb",
+			"description": "",
+			"size": 6,
+			"numElements": 3,
+			"elementSize": 2,
+			"type": "uint16",
+			"min": [0, 0, 0],
+			"max": [65024, 65024, 65024]
+		}
+	]
+}
