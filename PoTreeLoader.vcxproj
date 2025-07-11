@@ -143,9 +143,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="PoTreeLoaderSample.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="include\OctreeCore.h" />
     <ClInclude Include="include\PotreeLoader\Constants.h" />
     <ClInclude Include="include\PotreeLoader\Octree.h" />
@@ -156,6 +153,9 @@
     <ClInclude Include="include\ThirdParty\PotreeConverter\Buffer.h" />
     <ClInclude Include="include\ThirdParty\PotreeConverter\Geometry.h" />
     <ClInclude Include="include\ThirdParty\PotreeConverter\unsuck_platform_specific.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="sample_src\PoTreeLoaderSample.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
