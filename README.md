@@ -43,31 +43,32 @@ auto nodeData = loader.CreateMaxNodeData();
 const int bytesPerPoint = octree.geometry.pointAttributes.bytes;
 const auto scale        = octree.geometry.pointAttributes.posScale;
 const auto offset       = octree.geometry.pointAttributes.posOffset;
-const int pos_index     = loader.pcloud_byte_offsets.xyz;
+const int posIndex     = loader.pcloud_byte_offsets.xyz;
 
 std::vector<PointCloudItem> cloudpoints;
 cloudpoints.reserve(octree.points);
 
 /*----------- Extract data with Octree Loader Class ----------------------------*/
+// Traverse Octree Nodes
 octree.geometry.nodes[0]->traverse(
-	[maxLevel, &loader, &nodeData, bytesPerPoint, scale, offset, pos_index, &cloudpoints](OctreeGeometryNode* node, int level) {
+	[maxLevel, &loader, &nodeData, bytesPerPoint, scale, offset, posIndex, &cloudpoints](OctreeGeometryNode* node, int level) {
 
-    // Load raw node data
-		auto& data = loader.LoadNodeData(node, nodeData);
-		size_t pointCountInBuffer = node->byteSize / bytesPerPoint;
-		uint8_t* pBuffer = data.data();
+        // Load raw node data
+        auto& data = loader.LoadNodeData(node, nodeData);
+	size_t pointCountInBuffer = node->byteSize / bytesPerPoint;
+	uint8_t* pBuffer = data.data();
 
-    // Extract coordinates, apply scale plus offset and push to cloudpoints
-		for (int i = 0; i < pointCountInBuffer; ++i)
-		{
-			const int offsetToPointStart = i * bytesPerPoint;
+        // Extract coordinates, apply scale plus offset and push to cloudpoints
+	for (int i = 0; i < pointCountInBuffer; ++i)
+	{
+	     const int offsetToPointStart = i * bytesPerPoint;
 
-			double x = std::fma(static_cast<double>(*reinterpret_cast<int32_t*>(pBuffer + offsetToPointStart + pos_index)), scale.x, offset.x);
-			double y = std::fma(static_cast<double>(*reinterpret_cast<int32_t*>(pBuffer + offsetToPointStart + pos_index + sizeof(int32_t))), scale.y, offset.y);
-			double z = std::fma(static_cast<double>(*reinterpret_cast<int32_t*>(pBuffer + offsetToPointStart + pos_index + 2 * sizeof(int32_t))), scale.z, offset.z);
+             double x = std::fma(static_cast<double>(*reinterpret_cast<int32_t*>(pBuffer + offsetToPointStart + posIndex)), scale.x, offset.x);
+             double y = std::fma(static_cast<double>(*reinterpret_cast<int32_t*>(pBuffer + offsetToPointStart + posIndex + sizeof(int32_t))), scale.y, offset.y);
+             double z = std::fma(static_cast<double>(*reinterpret_cast<int32_t*>(pBuffer + offsetToPointStart + posIndex + 2 * sizeof(int32_t))), scale.z, offset.z);
 
-			cloudpoints.emplace_back(x, y, z);
-		}
+             cloudpoints.emplace_back(x, y, z);
+	}
 	});
 ```
 
