@@ -29,11 +29,11 @@ struct PointCloudItem {
 
 /*----------- Directory path to PoTree converted data -------------------------*/
 auto current_path = fs::current_path();
-string file_searchpath = (current_path / "sample_data" / "sparse_junction").string();
+std::string file_searchpath = (current_path / "sample_data" / "sparse_junction").string();
 
 /*----------- Initialize Octree class with PoTree metadata --------------------*/
 auto octreeFiles = octree_files::SearchOctreeFiles(file_searchpath);
-string metafile(octreeFiles["metadata"]);
+std::string metafile(octreeFiles["metadata"]);
 Octree octree(metafile);
 
 /*----------- Extract data with Octree Loader Class ---------------------------*/
