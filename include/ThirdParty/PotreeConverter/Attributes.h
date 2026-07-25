@@ -9,12 +9,12 @@
 
 #include "Geometry.h"
 #include "Buffer.h"
-#include "..\..\PotreeLoader\Constants.h"
 
 using std::string;
 using std::unordered_map;
 using std::vector;
 using geometry::Vector3;
+using geometry::Infinity;
 
 
 enum class AttributeType {

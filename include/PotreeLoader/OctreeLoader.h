@@ -7,7 +7,7 @@
 class OctreeLoader
 {
 private:
-	std::shared_ptr<Octree> octree;
+	Octree::Ptr octree;
 	Octree* pOctree;
 	OctreeFileReader OctreeReader;
 	int64_t max_node_bytes;
@@ -72,7 +72,7 @@ private:
 	}
 
 public:
-	OctreeLoader(std::shared_ptr<Octree>& octree) : 
+	OctreeLoader(Octree::Ptr& octree) :
 		octree(octree), pOctree(this->octree.get()), pcloud_byte_offsets(SetAttributeByteOffsets()), OctreeReader(pOctree->files.octree), max_node_bytes(GetMaxNodeSize()) {};
 
 	OctreeLoader(Octree* octreePtr) : 

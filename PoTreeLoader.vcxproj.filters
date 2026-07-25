@@ -30,9 +30,6 @@
     <ClInclude Include="include\ThirdParty\PotreeConverter\unsuck_platform_specific.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\PotreeLoader\Constants.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\PotreeLoader\Octree.h">
       <Filter>Header Files</Filter>
     </ClInclude>

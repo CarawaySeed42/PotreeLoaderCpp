@@ -5,10 +5,11 @@
 #include <cmath>
 #include <limits>
 #include <sstream>
-#include "..\..\PotreeLoader\Constants.h"
 
 namespace geometry
 {
+	constexpr double Infinity = std::numeric_limits<double>::infinity();
+
 	struct Vector3 {
 
 		double x = double(0.0);

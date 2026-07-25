@@ -144,7 +144,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\OctreeCore.h" />
-    <ClInclude Include="include\PotreeLoader\Constants.h" />
     <ClInclude Include="include\PotreeLoader\Octree.h" />
     <ClInclude Include="include\PotreeLoader\OctreeData.h" />
     <ClInclude Include="include\PotreeLoader\OctreeFileReader.h" />

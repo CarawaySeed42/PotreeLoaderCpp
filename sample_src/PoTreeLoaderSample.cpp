@@ -1,12 +1,9 @@
 // PoTreeLoader.cpp : This file contains the 'main' function. Program execution begins and ends there.
-#include <iostream>
 #include <math.h>
 #include <filesystem>
 
 #include "../include/OctreeCore.h"
 
-using std::vector;
-using std::string;
 namespace fs = std::filesystem;
 
 #ifndef FP_FAST_FMA
@@ -26,48 +23,45 @@ int main(int argc, char** argv) {
 
 	// Directory path to PoTree converted data
 	auto current_path = fs::current_path();
-	string file_searchpath = (current_path / "sample_data" / "sparse_junction").string();
+	std::string file_searchpath = (current_path / "sample_data" / "sparse_junction").string();
 
 	/*------------Initialize Octree class with PoTree metadata ------------------------*/
 	auto octreeFiles = octree_files::SearchOctreeFiles(file_searchpath);
-	string metafile(octreeFiles["metadata"]);
-	Octree octree(metafile);
+	std::string metafile(octreeFiles["metadata"]);
+	Octree::Ptr octree = std::make_shared<Octree>(metafile);
 
 	/*----------- Extract data with Octree Loader Class ---------------------------*/
-	OctreeLoader loader(&octree);
+	OctreeLoader loader(octree);
 	auto nodeData = loader.CreateMaxNodeData();
 
-	int bytesPerPoint = octree.geometry.pointAttributes.bytes;
-	auto scale = octree.geometry.pointAttributes.posScale;
-	const auto offset = octree.geometry.pointAttributes.posOffset;
-	int pos_index = loader.pcloud_byte_offsets.xyz;
-	int int_index = loader.pcloud_byte_offsets.intensity;
-	int rgb_index = loader.pcloud_byte_offsets.rgb;
+	int bytesPerPoint    = octree->geometry.pointAttributes.bytes;
+	const Vector3 scale  = octree->geometry.pointAttributes.posScale;
+	const Vector3 offset = octree->geometry.pointAttributes.posOffset;
+	const int pos_index  = loader.pcloud_byte_offsets.xyz;
+	const int int_index  = loader.pcloud_byte_offsets.intensity;
+	const int rgb_index  = loader.pcloud_byte_offsets.rgb;
 
 	bool hasIntensity = true;
 	bool hasRGB = true;
 
-	if (pos_index < 0)
-	{
+	if (pos_index < 0) {
 		std::cerr << "'position' not found in attribute list" << std::endl;
 		return 1;
 	}
-	if (int_index < 0)
-	{
+	if (int_index < 0) {
 		std::cerr << "'intensity' not found in attribute list" << std::endl;
 		hasIntensity = false;
 	}
-	if (rgb_index < 0)
-	{
+	if (rgb_index < 0) {
 		std::cerr << "'rgb' not found in attribute list" << std::endl;
 		hasRGB = false;
 	}
 
 	std::vector<PointCloudItem> cloudpoints;
-	cloudpoints.reserve(octree.points);
+	cloudpoints.reserve(octree->points);
 
 	// Start reading and extracting until max level
-	octree.geometry.nodes[0]->traverse(
+	octree->geometry.nodes[0]->traverse(
 		[maxLevel, &loader, &nodeData, bytesPerPoint, scale, offset, pos_index, int_index, rgb_index, &cloudpoints, hasRGB, hasIntensity](OctreeGeometryNode* node, int level) {
 
 			if (node->level > maxLevel)
@@ -96,16 +90,14 @@ int main(int argc, char** argv) {
 #endif
 
 				uint16_t r = 0, g = 0, b = 0;
-				if (hasRGB)
-				{
+				if (hasRGB) {
 					r = *reinterpret_cast<uint16_t*>(pBuffer + offsetToPointStart + rgb_index);
 					g = *reinterpret_cast<uint16_t*>(pBuffer + offsetToPointStart + rgb_index + sizeof(uint16_t));
 					b = *reinterpret_cast<uint16_t*>(pBuffer + offsetToPointStart + rgb_index + 2 * sizeof(uint16_t));
 				}
 
 				uint16_t intensity = 0;
-				if (hasIntensity)
-				{
+				if (hasIntensity) {
 					intensity = *reinterpret_cast<uint16_t*>(pBuffer + offsetToPointStart + int_index);
 				}
 
@@ -114,10 +106,6 @@ int main(int argc, char** argv) {
 		});
 
 	std::printf("Finished loading %zd points from octree data!\n", cloudpoints.size());
-
-#ifdef FP_FAST_FMA
-#undef FP_FAST_FMA
-#endif
 
 	return 0;
 }

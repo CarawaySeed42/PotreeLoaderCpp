@@ -16,34 +16,38 @@ Features:
 
 ## How to use
 - Create an Octree object using metadata file as argument
-- Initiallize data loader
+- Initialize data loader
 - Get scale, offset and the index of the position coordinates in data
 - Traverse nodes and load their respective point data
 - Extract your desired point attributes
 
 ```
+#include <math.h>
+#include <filesystem>
+#include "./include/OctreeCore.h"
+
 // A PointCloudItem with XYZ coordinates
 struct PointCloudItem {
 	double x, y, z;
 };
 
 /*----------- Directory path to PoTree converted data -------------------------*/
-auto current_path = fs::current_path();
+auto current_path = std::filesystem::current_path();
 std::string file_searchpath = (current_path / "sample_data" / "sparse_junction").string();
 
 /*----------- Initialize Octree class with PoTree metadata --------------------*/
 auto octreeFiles = octree_files::SearchOctreeFiles(file_searchpath);
 std::string metafile(octreeFiles["metadata"]);
-Octree octree(metafile);
+Octree::Ptr octree = std::make_shared<Octree>(metafile);
 
 /*----------- Extract data with Octree Loader Class ---------------------------*/
-OctreeLoader loader(&octree);
+OctreeLoader loader(octree);
 auto nodeData = loader.CreateMaxNodeData();
 
 const int bytesPerPoint = octree.geometry.pointAttributes.bytes;
 const auto scale        = octree.geometry.pointAttributes.posScale;
 const auto offset       = octree.geometry.pointAttributes.posOffset;
-const int posIndex     = loader.pcloud_byte_offsets.xyz;
+const int posIndex      = loader.pcloud_byte_offsets.xyz;
 
 std::vector<PointCloudItem> cloudpoints;
 cloudpoints.reserve(octree.points);
@@ -53,21 +57,21 @@ cloudpoints.reserve(octree.points);
 octree.geometry.nodes[0]->traverse(
 	[maxLevel, &loader, &nodeData, bytesPerPoint, scale, offset, posIndex, &cloudpoints](OctreeGeometryNode* node, int level) {
 
-        // Load raw node data
-        auto& data = loader.LoadNodeData(node, nodeData);
+    // Load raw node data
+    auto& data = loader.LoadNodeData(node, nodeData);
 	size_t pointCountInBuffer = node->byteSize / bytesPerPoint;
 	uint8_t* pBuffer = data.data();
 
-        // Extract coordinates, apply scale plus offset and push to cloudpoints
+    // Extract coordinates, apply scale plus offset and push to cloudpoints
 	for (int i = 0; i < pointCountInBuffer; ++i)
 	{
-	     const int offsetToPointStart = i * bytesPerPoint;
+		const int offsetToPointStart = i * bytesPerPoint;
 
-             double x = std::fma(static_cast<double>(*reinterpret_cast<int32_t*>(pBuffer + offsetToPointStart + posIndex)), scale.x, offset.x);
-             double y = std::fma(static_cast<double>(*reinterpret_cast<int32_t*>(pBuffer + offsetToPointStart + posIndex + sizeof(int32_t))), scale.y, offset.y);
-             double z = std::fma(static_cast<double>(*reinterpret_cast<int32_t*>(pBuffer + offsetToPointStart + posIndex + 2 * sizeof(int32_t))), scale.z, offset.z);
+    	double x = std::fma(static_cast<double>(*reinterpret_cast<int32_t*>(pBuffer + offsetToPointStart + posIndex)), scale.x, offset.x);
+    	double y = std::fma(static_cast<double>(*reinterpret_cast<int32_t*>(pBuffer + offsetToPointStart + posIndex + sizeof(int32_t))), scale.y, offset.y);
+    	double z = std::fma(static_cast<double>(*reinterpret_cast<int32_t*>(pBuffer + offsetToPointStart + posIndex + 2 * sizeof(int32_t))), scale.z, offset.z);
 
-             cloudpoints.emplace_back(x, y, z);
+    	cloudpoints.emplace_back(x, y, z);
 	}
 	});
 ```
@@ -79,7 +83,6 @@ For an example how to additionally load point color data, build the sample sourc
 - Open the provided Visual Studio solution with VS2017 or newer (VS2022 is recommended)
 - Select your target configuration and hit build
 - Run ``PoTreeLoader.exe``
-  Running the program with the debugger in Debug mode is recommended. Set breakpoints to see how the code operates.
 
 
 ## Credits

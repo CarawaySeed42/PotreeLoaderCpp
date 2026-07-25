@@ -38,12 +38,6 @@ struct OctreeFileReader
 
 		auto bytes_read = readBinaryData(file, byte_start, byte_size, target);
 
-		// Determine bytes to read
-		//auto bytes_to_read = (std::min)(byte_start + byte_size, file_size) - byte_start;
-
-		//// Read the data
-		//_fseeki64(file, byte_start, SEEK_SET);
-		//const auto bytes_read = fread(target, sizeof(uint8_t), bytes_to_read, file);
 		fclose(file);
 
 		return bytes_read;
@@ -51,9 +45,7 @@ struct OctreeFileReader
 
 	inline size_t readBinaryData(uint64_t byte_start, uint64_t byte_size, std::vector<uint8_t>& data)
 	{
-		// Resize the data vector if necessary
-		if (data.size() < byte_size)
-		{
+		if (data.size() < byte_size) {
 			data.resize(byte_size);
 		}
 

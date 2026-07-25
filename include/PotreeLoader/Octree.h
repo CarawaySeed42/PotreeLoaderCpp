@@ -392,6 +392,8 @@ namespace octree_files
 class Octree
 {
 public:
+	using Ptr = shared_ptr<Octree>;
+
 	string version;
 	string name;
 	string description;
